@@ -1,6 +1,6 @@
 TWRP Device Tree for Redmi K30 5G
 =========================================
-
+Still test, loop!!!!!!
 
 # Device specifications
 
