@@ -7,4 +7,7 @@
 PRODUCT_MAKEFILES := \
     $(LOCAL_DIR)/twrp_picasso.mk
 
-COMMON_LUNCH_CHOICES := twrp_picasso-eng
+COMMON_LUNCH_CHOICES := \
+    twrp_picasso-user \
+    twrp_picasso-userdebug \
+    twrp_picasso-eng
