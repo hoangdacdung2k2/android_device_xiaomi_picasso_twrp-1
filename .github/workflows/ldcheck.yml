@@ -56,7 +56,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@master
-
     - name: LD Check
       run: |
          PATH=~/bin:$PATH
