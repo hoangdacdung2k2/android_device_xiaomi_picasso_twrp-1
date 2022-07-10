@@ -57,16 +57,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@master
 
-    - name: Maximize Build Space
-      uses: easimon/maximize-build-space@master
-      with:
-        root-reserve-mb: 1024
-        swap-size-mb: 10240
-        remove-dotnet: 'true'
-        temp-reserve-mb: 1024
-        remove-android: 'true'
-        remove-haskell: 'true'
-
     - name: Initializing environment
       run: |
         sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d
