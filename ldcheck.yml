@@ -1,0 +1,92 @@
+name: LDCheck
+
+on:
+  workflow_dispatch:
+    inputs:
+      MANIFEST_TYPE:
+        description: 'MANIFEST_TYPE'
+        required: true
+        default: 'twrp'
+        type: choice
+        options:
+        - twrp
+        - omni
+      MANIFEST_URL:
+        description: 'MANIFEST_URL'
+        required: true
+        default: 'https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git'
+      LIBRARY_BRANCH:
+        description: 'LIBRARY_BRANCH'
+        required: true
+        default: 'twrp-12.1'
+        type: choice
+        options:
+        - twrp-11
+        - twrp-12.1
+      DEVICE_TREE_URL:
+        description: 'DEVICE_TREE_URL'
+        required: true
+        default: 'https://github.com/hdzungx/android_device_xiaomi_picasso_twrp.git'
+      DEVICE_TREE_BRANCH:
+        description: 'DEVICE_TREE_BRANCH'
+        required: true
+        default: 'android-12.1'
+      DEVICE_PATH:
+        description: 'DEVICE_PATH'
+        required: true
+        default: 'device/xiaomi/picasso'
+      DEVICE_NAME:
+        description: 'DEVICE_NAME'
+        required: true
+        default: 'picasso'
+      DEVICE_TYPE:
+        description: 'DEVICE_TYPE'
+        required: true
+        default: 'recovery'
+        type: choice
+        options:
+        - recovery
+        - boot
+        - vendorboot
+jobs:
+  build:
+    if: github.event.repository.owner.id == github.event.sender.id
+    runs-on: ubuntu-18.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Maximize Build Space
+      uses: easimon/maximize-build-space@master
+      with:
+        root-reserve-mb: 1024
+        swap-size-mb: 10240
+        remove-dotnet: 'true'
+        temp-reserve-mb: 1024
+        remove-android: 'true'
+        remove-haskell: 'true'
+
+    - name: Initializing environment
+      run: |
+        sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d
+        docker rmi `docker images -q`
+        sudo apt-get remove account-plugin-facebook account-plugin-flickr account-plugin-jabber account-plugin-salut account-plugin-twitter account-plugin-windows-live account-plugin-yahoo aisleriot brltty duplicity empathy empathy-common example-content gnome-accessibility-themes gnome-contacts gnome-mahjongg gnome-mines gnome-orca gnome-screensaver gnome-sudoku gnome-video-effects gnomine landscape-common libreoffice-avmedia-backend-gstreamer libreoffice-base-core libreoffice-calc libreoffice-common libreoffice-core libreoffice-draw libreoffice-gnome libreoffice-gtk libreoffice-impress libreoffice-math libreoffice-ogltrans libreoffice-pdfimport libreoffice-style-galaxy libreoffice-style-human libreoffice-writer libsane libsane-common mcp-account-manager-uoa python3-uno rhythmbox rhythmbox-plugins rhythmbox-plugin-zeitgeist sane-utils shotwell shotwell-common telepathy-gabble telepathy-haze telepathy-idle telepathy-indicator telepathy-logger telepathy-mission-control-5 telepathy-salut totem totem-common totem-plugins printer-driver-brlaser printer-driver-foo2zjs printer-driver-foo2zjs-common printer-driver-m2300w printer-driver-ptouch printer-driver-splix
+        git config --global user.name "hdzungx"
+        git config --global user.email "hdzungx@gmail.com"
+        sudo -E apt-get -y purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* mysql* php*
+        sudo -E apt-get clean
+        sudo -E apt-get -qq update
+        sudo -E apt-get -qq install bc build-essential zip curl libstdc++6 git wget python gcc clang libssl-dev repo rsync flex bison aria2
+        sudo curl --create-dirs -L -o /usr/local/bin/repo -O -L https://storage.googleapis.com/git-repo-downloads/repo
+        sudo chmod a+rx /usr/local/bin/repo
+
+
+    - name: Clone Device Tree
+      run: |
+        cd ${GITHUB_WORKSPACE}/workspace
+        git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ${{ github.event.inputs.DEVICE_PATH }}  
+    - name: LD Check
+      run: |
+        cd ${GITHUB_WORKSPACE}/workspace/recovery/root
+        ldcheck -p system/lib64:vendor/lib64 -d system/bin/qseecomd
