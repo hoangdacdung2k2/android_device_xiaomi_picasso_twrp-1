@@ -48,6 +48,6 @@ jobs:
         git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
         cd './device/xiaomi/picasso'
         git clone https://github.com/that1/ldcheck.git
-        mv ~ldcheck/{ldcheck,libneeds} ~/recovery/root/
+        mv ./ldcheck/{ldcheck,libneeds} ./recovery/root/
         cd './recovery/root'
         python ldcheck -p system/lib64:vendor/lib64 -d system/bin/qseecomd
