@@ -40,7 +40,6 @@ jobs:
         python -m pip install protobuf==3.19.4
         python -m pip install bsdiff4
         python -m pip install requests
-        sudo apt-get install -y axel
     - name: LD Check
       run: |
         PATH=~/bin:$PATH
