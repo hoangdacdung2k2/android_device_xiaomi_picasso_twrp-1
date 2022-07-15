@@ -45,7 +45,7 @@ jobs:
         PATH=~/bin:$PATH
         cd ${{ steps.pwd.outputs.pwd }}
         git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
-        cd './device/xiaomi/picasso'
+        cd ./${{ github.event.inputs.DEVICE_PATH }}
         git clone https://github.com/that1/ldcheck.git
         mv ./ldcheck/{ldcheck,libneeds} ./recovery/root/
         cd './recovery/root'
