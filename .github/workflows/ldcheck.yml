@@ -49,5 +49,5 @@ jobs:
         cd './device/xiaomi/picasso'
         cd './recovery/root'
         axel -n 4 https://github.com/that1/ldcheck/archive/refs/heads/master.zip -o ldcheck.zip
-        unzip ldcheck.zip -d payload_dumper && rm -v ldcheck.zip
-        ldcheck -p system/lib64:vendor/lib64 -d system/bin/qseecomd
+        unzip ldcheck.zip && rm -v ldcheck.zip
+        python ldcheck -p system/lib64:vendor/lib64 -d system/bin/qseecomd
