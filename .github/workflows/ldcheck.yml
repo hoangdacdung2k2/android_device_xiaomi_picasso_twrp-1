@@ -47,7 +47,7 @@ jobs:
         cd ${{ steps.pwd.outputs.pwd }}
         git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
         cd './device/xiaomi/picasso'
-        cd './recovery/root'
         axel -n 4 https://github.com/that1/ldcheck/archive/refs/heads/master.zip -o ldcheck.zip
-        unzip -ldcheck.zip -d /recovery/root && rm -v ldcheck.zip
+        unzip -ldcheck.zip -d './recovery/root' && rm -v ldcheck.zip
+        cd './recovery/root'
         python ldcheck -p system/lib64:vendor/lib64 -d system/bin/qseecomd
